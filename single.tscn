@@ -1,0 +1,176 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://single.gd" type="Script" id=1]
+[ext_resource path="res://new_dynamicfont.tres" type="DynamicFont" id=2]
+[ext_resource path="res://pexels-anugrah-lohiya.jpg" type="Texture" id=3]
+[ext_resource path="res://fonts/Sora/Sora-VariableFont_wght.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://splash.ogg" type="AudioStream" id=5]
+[ext_resource path="res://airport-terminal-aircrafts-at-dusk.jpg" type="Texture" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 34
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 59
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 25
+font_data = ExtResource( 4 )
+
+[node name="splash" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="rcam" type="Button" parent="."]
+margin_left = 129.019
+margin_top = 432.039
+margin_right = 439.019
+margin_bottom = 775.039
+rect_pivot_offset = Vector2( 192.5, 100.386 )
+size_flags_horizontal = 15
+size_flags_vertical = 15
+custom_fonts/font = SubResource( 1 )
+text = "RCAM"
+expand_icon = true
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": "helo  this is a description"
+}
+
+[node name="aerodas" type="Button" parent="."]
+margin_left = 551.392
+margin_top = 427.627
+margin_right = 875.392
+margin_bottom = 766.627
+grow_horizontal = 0
+grow_vertical = 0
+rect_pivot_offset = Vector2( 192.5, 100.386 )
+size_flags_horizontal = 15
+size_flags_vertical = 15
+custom_fonts/font = SubResource( 1 )
+text = "Aerodas"
+expand_icon = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="simulink" type="Button" parent="."]
+margin_left = 989.51
+margin_top = 428.157
+margin_right = 1328.51
+margin_bottom = 775.157
+grow_horizontal = 0
+grow_vertical = 0
+rect_pivot_offset = Vector2( 192.5, 100.386 )
+size_flags_horizontal = 15
+size_flags_vertical = 15
+custom_fonts/font = SubResource( 1 )
+text = "Simulink (drone)"
+expand_icon = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="flightmodes" type="Button" parent="."]
+margin_left = 1453.39
+margin_top = 433.98
+margin_right = 1782.39
+margin_bottom = 771.98
+grow_horizontal = 0
+grow_vertical = 0
+rect_pivot_offset = Vector2( 192.5, 100.386 )
+size_flags_horizontal = 15
+size_flags_vertical = 15
+custom_fonts/font = SubResource( 1 )
+text = "Dynamic Modes"
+clip_text = true
+expand_icon = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="exit" type="Button" parent="."]
+margin_left = 1661.45
+margin_top = 904.511
+margin_right = 1859.45
+margin_bottom = 983.511
+custom_fonts/font = ExtResource( 2 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 1712.0
+margin_top = 1025.0
+margin_right = 1872.0
+margin_bottom = 1054.0
+custom_fonts/font = ExtResource( 2 )
+text = "Version : 0.1 alpha"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="pexels-anugrah-lohiya" type="Sprite" parent="."]
+visible = false
+self_modulate = Color( 1, 1, 1, 0.407843 )
+position = Vector2( 943.517, 545 )
+scale = Vector2( 0.392055, 0.394369 )
+z_index = -1
+texture = ExtResource( 3 )
+
+[node name="Label" type="Label" parent="pexels-anugrah-lohiya"]
+margin_right = 40.0
+margin_bottom = 14.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 694.804
+margin_top = 31.196
+margin_right = 1123.8
+margin_bottom = 186.196
+custom_fonts/font = SubResource( 2 )
+text = "Single Pilot"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+position = Vector2( 511.218, 157.418 )
+stream = ExtResource( 5 )
+volume_db = 15.0
+autoplay = true
+
+[node name="info" type="Label" parent="."]
+margin_left = 131.0
+margin_top = 178.0
+margin_right = 1575.0
+margin_bottom = 372.0
+grow_horizontal = 2
+grow_vertical = 2
+custom_fonts/font = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+show_behind_parent = true
+position = Vector2( 1006.61, 561.154 )
+scale = Vector2( 0.795326, 0.804502 )
+texture = ExtResource( 6 )
+[connection signal="mouse_entered" from="rcam" to="." method="_on_rcam_mouse_entered"]
+[connection signal="mouse_exited" from="rcam" to="." method="_on_rcam_mouse_exited"]
+[connection signal="pressed" from="rcam" to="." method="_on_rcam_pressed"]
+[connection signal="mouse_entered" from="aerodas" to="." method="_on_aerodas_mouse_entered"]
+[connection signal="mouse_exited" from="aerodas" to="." method="_on_aerodas_mouse_exited"]
+[connection signal="pressed" from="aerodas" to="." method="_on_aerodas_pressed"]
+[connection signal="mouse_entered" from="simulink" to="." method="_on_simulink_mouse_entered"]
+[connection signal="mouse_exited" from="simulink" to="." method="_on_simulink_mouse_exited"]
+[connection signal="pressed" from="simulink" to="." method="_on_simulink_pressed"]
+[connection signal="mouse_entered" from="flightmodes" to="." method="_on_flightmodes_mouse_entered"]
+[connection signal="mouse_exited" from="flightmodes" to="." method="_on_flightmodes_mouse_exited"]
+[connection signal="pressed" from="flightmodes" to="." method="_on_flightmodes_pressed"]
+[connection signal="pressed" from="exit" to="." method="_on_back_pressed"]

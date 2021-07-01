@@ -1,0 +1,15 @@
+static func column_cross(M: Array, M2: Array, in_place: bool=false)->Array:
+	var ax = M[0][0]
+	var ay = M[1][0]
+	var az = M[2][0]
+	var bx = M2[0][0]
+	var by = M2[1][0]
+	var bz = M2[2][0]
+	
+	var cx = (ay*bz)-(az*by)
+	var cy = (az*bx)-(ax*bz)
+	var cz = (ax*by)-(ay*bx)
+	
+	var ans = [[cx],[cy],[cz]]
+	return ans
+

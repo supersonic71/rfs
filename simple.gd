@@ -1,9 +1,5 @@
 extends KinematicBody
 
-
-	
-#why does dropping move forward
-#get better formula for cl and cd vs alpha
 var g = -9.81 #m/s
 var speed = 50
 var velocity = Vector3(0,0,speed)
@@ -34,7 +30,6 @@ var S = 0
 var G_local = Vector3(0,0,0)
 var heading = 0
 
-
 #multiplayer
 puppet var slave_transform= Transform()
 
@@ -59,9 +54,6 @@ func _ready():
 	translation = Vector3(0,1000,-2000)
 	if is_network_master(): 
 		$Camera.set_current(true)
-		
-		
-	
 
 	f1 = 1.190 * ( 1 - pow(tc,2) ) 
 	f2 = 0.65 + 0.35*pow(2.718,( -pow((9/ar),2.3) ))
@@ -72,16 +64,9 @@ func _ready():
 	cl2max = f1 * f2
 	cd2max = g1 * g2
 
-	
-	
-		
-
-# warning-ignore:unused_argument
 func _process(delta):
 	if Input.is_action_just_pressed("ui_reset"): #does this work in multiplayer?
 		get_tree().reload_current_scene()
-		
-	
 		
 	$"../HUD/fps_count".text = "FPS : " +  str(1/(delta+.001)) #hack to prevent divide by zero
 	
@@ -96,8 +81,6 @@ func alpha2CL(alpha):
 	n2 = 1 + cl2max/rcl2
 
    #for negative alpha
-
-	
 	if alpha < 0:
 		cl2 =  -alpha2CL(-alpha)
 	elif 0 <= alpha and alpha < acl1 :
@@ -107,8 +90,8 @@ func alpha2CL(alpha):
 	else:
 		cl2 = -0.032* (alpha - 92) + rcl2 * pow(((alpha - 92)/51),n2)
 
-   
 	return cl2
+
 var angle = 0
 
 func alpha2CD(alpha):
@@ -119,7 +102,6 @@ func alpha2CD(alpha):
 		angle = deg2rad(90* ((alpha-acd1)/(90 - acd1)) )
 		cd2 = cd1max + (cd2max - cd1max) * sin(angle)
 	  
-
    # negative angle of attack
 	if alpha <= (2*a0 - acd1) :
 		cd2 = alpha2CD( -alpha + 2*a0)
@@ -129,12 +111,7 @@ var k = 0
 
 func _physics_process(delta):
 
-# warning-ignore:shadowed_variable
-# warning-ignore:unused_variable
-# warning-ignore:shadowed_variable
 	if is_network_master(): 
-		
-		
 		var acc = Vector3(0,0,0)
 		if Input.is_action_pressed("ui_pitch_down"): 
 			rotate_object_local(Vector3(1, 0, 0), delta*am*.3)
@@ -165,14 +142,9 @@ func _physics_process(delta):
 			$"../HUD/debug".visible = not $"../HUD/debug".visible #toggle
 		if T < 0:
 			T = 0
-		
-			
-	
-		#variation of drag with sideslip?
 		#should alpha change when rolling (with an already existing pitch)
 		dir = get_transform().basis.z
 		#velocity = dir * speed
-		
 		
 		vela = transform.basis.xform_inv(velocity - wind_vector)
 		alpha =  atan2(-vela.y, vela.z)
@@ -183,33 +155,12 @@ func _physics_process(delta):
 			elif beta > 0:
 				rotate_object_local(Vector3(0, 1, 0), delta*am*.3)
 			
-	# warning-ignore:return_value_discarded
-		
-		
-		
-	
-	
-		
-		
-	#	given an aircraft representred by 3 axis
 	#	and velocity vector. how to find angle of attack
 		force = Vector3(0,0,0)	
 		
 		CL = alpha2CL(rad2deg(alpha))
 		CD = alpha2CD(rad2deg(alpha))
 		$"../HUD/debug".text = str(CL) + "\n" + str(CD)
-#		CL = 1
-#		CD = .1
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		L = .5 * 1.225 * S_wing * velocity.length() * velocity.length()* CL
 		D = .5 * 1.225 * S_wing * velocity.length() * velocity.length()* CD
@@ -219,11 +170,7 @@ func _physics_process(delta):
 		A = A + T
 		S = 0 #side force. from yaw. aileron not related here
 		
-		
-		
-		
 		#aileron force is manifested in the global frame
-		
 		#convert NSA to earth frame
 		force = Vector3(S,N,A)
 		G_local = -force.y/(weight)  #plus one because formula, other for gravity
@@ -234,8 +181,6 @@ func _physics_process(delta):
 		acc.y+=g
 		#make acceleration affect velocity (multiply by delta)
 		velocity += acc*delta
-		
-		
 		
 		$"../HUD/aoa".text = "AOA\n" + str(rad2deg(alpha)) + "\nBeta\n" + str(rad2deg(beta))
 
@@ -268,6 +213,4 @@ func _physics_process(delta):
 		transform = slave_transform
 	velocity = move_and_slide(velocity,Vector3(0,1,0))
 # warning-ignore:return_value_discarded
-	
-		
 	

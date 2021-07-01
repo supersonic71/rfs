@@ -78,13 +78,7 @@ func game_setup(): #this will setup every player instance for every player. when
 	var globe = get_node("/root/global")
 	#first the host will setup the game on their end
 	if get_tree().is_network_server(): 	
-#		for peer_id in players:                                          
-#			var player_instance = load("res://Player.tscn").instance()	
-#			player_instance.set_name(str(peer_id))
-#			player_instance.set_network_master(peer_id)
-#			get_node("/root").add_child(player_instance)
-			#player_instance.playerID = str(1) 
-		
+
 		if globe.simple == true:
 			var player_instance = load("res://simple.tscn").instance()	#dont forget to add yourself  server guy!
 			player_instance.set_name(str(1))

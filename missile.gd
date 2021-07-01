@@ -1,9 +1,5 @@
 extends KinematicBody
 
-
-
-	
-#why does dropping move forward
 #get better formula for cl and cd vs alpha
 var g = -9.81 #m/s
 var speed = 0
@@ -33,38 +29,24 @@ var S = 0
 var G_local = Vector3(0,0,0)
 var heading = 0
 
-
-
-
 func _ready():
 	yield(get_tree().create_timer(5),"timeout")
 	queue_free()
-
-
-	
-		
 
 # warning-ignore:unused_argument
 func _process(delta): #change this !
 	#$Label.set_text(str(playerID))
 	pass
-	
-	
+		
 func _physics_process(delta):
 
 	if 1<2:
 		
 		var acc = Vector3(0,0,0)
-		
-		
-			
-	
 		#variation of drag with sideslip?
 		#should alpha change when rolling (with an already existing pitch)
 		dir = get_transform().basis.z
 		#velocity = dir * speed
-		
-		
 		vela = transform.basis.xform_inv(velocity)
 		alpha =  atan2(-vela.y, vela.z)
 		beta = atan2(vela.x,vela.length())
@@ -74,14 +56,6 @@ func _physics_process(delta):
 			elif beta > 0:
 				rotate_object_local(Vector3(0, 1, 0), delta*am*.3)
 			
-		
-		
-		
-	
-	
-		
-		
-	#	given an aircraft representred by 3 axis
 	#	and velocity vector. how to find angle of attack
 		force = Vector3(0,0,0)	
 		
@@ -96,10 +70,7 @@ func _physics_process(delta):
 		A = -A
 		A = A + T
 		S = 0 #side force. from yaw. aileron not related here
-		
-		
-		
-		
+
 		#aileron force is manifested in the global frame
 		
 		#convert NSA to earth frame
@@ -112,9 +83,6 @@ func _physics_process(delta):
 		acc.y+=g
 		#make acceleration affect velocity (multiply by delta)
 		velocity += acc*delta
-		
-		
-		
 	
 		transform = transform.orthonormalized() 
 		
@@ -123,7 +91,4 @@ func _physics_process(delta):
 		pass
 # warning-ignore:return_value_discarded
 	move_and_slide(velocity,Vector3(0,1,0))
-		
-	
-
 

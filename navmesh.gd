@@ -77,18 +77,7 @@ func _update_path():
 	set_process(true)
 	
 	if draw_path:
-#		var im = get_node("Draw")
-#		im.set_material_override(m)
-#		im.clear()
-#		im.begin(Mesh.PRIMITIVE_POINTS, null)
-#		im.add_vertex(begin)
-#		im.add_vertex(end)
-#		im.end()
-#		im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
-#		for x in p:
-#			im.add_vertex(x)
-#		im.end()
-		
+
 		get_node("RobotBase/target").clear_points()
 #		for i in range(p.size()-1, -1, -1):
 		for i in range(p.size()):

@@ -1,6 +1,6 @@
 extends Node2D
 
-var players = {} #what are curly braces for
+var players = {}
 
 func _ready():
 	pass
@@ -8,10 +8,6 @@ func _ready():
 func host_server():	
 	var peer = NetworkedMultiplayerENet.new()
 	peer.create_server(4241, 10)
-	
-	
-	
-	
 	get_tree().set_network_peer(peer)
 	#checks:
 	print("Hosting...This is my ID: ", str(get_tree().get_network_unique_id()))
@@ -22,10 +18,7 @@ func host_server():
 func join_server():
 	var peer_join = NetworkedMultiplayerENet.new()
 	peer_join.create_client("127.0.0.1", 4241)
-	get_tree().change_scene("res://rivendell.tscn")
-	
-	
-	
+	get_tree().change_scene("res://rivendell.tscn")	
 	
 	get_tree().set_network_peer(peer_join)	
 	#checks:
@@ -88,7 +81,6 @@ func game_setup(): #this will setup every player instance for every player. when
 		player_instance.set_network_master(1)
 		get_node("/root").add_child(player_instance)
 		player_instance.playerID = str(1) 
-		
 			
 	#Next evey player will spawn every other player including the server's own client! Try to move this to server only 
 	for peer_id in players:

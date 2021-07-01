@@ -28,32 +28,45 @@ func _process(delta):
 
 func rcm(X, U):
 	
+	# The function takes the values from control surfaces, and current state parameters
+	# as input, and returns the next state values of the aircraft.
+	#
+	#
+	# Input :
+	#       1. X : a (9x1) dimensional vector contains the values from control surfaces.
+	#       2. U : a (5x1) dimensional vector contains the values of current state of aircraft.
+	#
+	# Output : XDOT : a (12x1) dimensional vector contains the next state of aircraft.
+	#
 	
-	var x1 = X[0][0]; 
-	var x2 = X[1][0]; 
-	var x3 = X[2][0]; 
-	var x4 = X[3][0]; 
-	var x5 = X[4][0]; 
-	var x6 = X[5][0]; 
-	var x7 = X[6][0]; 
-	var x8 = X[7][0]; 
-	var x9 = X[8][0]; 
+	# the process invloves 10 different steps.
 
 
-	var u1 = U[0][0]; 
-	var u2 = U[1][0]; 
-	var u3 = U[2][0]; 
-	var u4 = U[3][0]; 
-	var u5 = U[4][0];  
-
-
-	var m = 130000.0; 
-
-	var cbar = 6.6; 
+	# State and control vector
+	var x1 = X[0][0];   # u
+	var x2 = X[1][0];   # v
+	var x3 = X[2][0];   # w
+	var x4 = X[3][0];   # p
+	var x5 = X[4][0];   # q
+	var x6 = X[5][0];   # r
+	var x7 = X[6][0];   # phi
+	var x8 = X[7][0];   # theta
+	var x9 = X[8][0];   # psi
+	
+	var u1 = U[0][0];   # d_A (aileron)
+	var u2 = U[1][0];   # d_T (full stabilizer)
+	var u3 = U[2][0];   # d_R (rudder)
+	var u4 = U[3][0];   # d_th1 (throttle 1)
+	var u5 = U[4][0];   # d_th2 (throttle 2)
+	
+	# constants
+	var m = 130000.0;   # aircraft mass 
+	
+	var cbar = 6.6;     # MAC
 	var lt = 24.8;
 	var S = 260.0;
 	var St = 64.0;
-
+	
 	var Xcg = 0.23*cbar; 
 	var Ycg = 0.0;
 	var Zcg = 0.10*cbar;
@@ -61,9 +74,8 @@ func rcm(X, U):
 	var Xac = 0.12*cbar;
 	var Yac = 0.0;
 	var Zac = 0.0;
-
-
-
+	
+	# Engine
 	var Xapt1 = 0.0;
 	var Yapt1 = -7.94;
 	var Zapt1 = -1.9;
@@ -71,21 +83,21 @@ func rcm(X, U):
 	var Xapt2 = 0.0;
 	var Yapt2 = 7.94;
 	var Zapt2 = -1.9;
-
-
-	var rho = 1.225; 
+	
+	var rho = 1.225;    # density
 	var g = 9.81; 
-	var depsda = .25; 
-	var alpha_L0 = -11.5*PI/180; 
+	var depsda = .25;   # downwash wrt alpha
+	var alpha_L0 = -11.5*PI/180;    # zero lift angle of attact(rad)
 	var n = 5.5;
 	var a3 = -768.5;
 	var a2 = 609.2;
 	var a1 = -155.2;
 	var a0 = 15.292;
 	var alpha_switch = 14.5 * (PI/180);
-
-
-
+	
+	
+	#           ----------  saturation ----------
+	#
 	var u1min = -25*PI/180; 
 	var u1max = 25*PI/180;
 	
@@ -100,7 +112,7 @@ func rcm(X, U):
 	
 	var u5min = 0.5*PI/180;
 	var u5max = 10*PI/180;
-
+	
 	if(u1>u1max):
 		u1 = u1max;
 	elif(u1<u1min):
@@ -118,7 +130,7 @@ func rcm(X, U):
 	elif(u3<u3min):
 		u3 = u3min;
 	
-
+	
 	if(u4>u4max):
 		u4 = u4max;
 	elif(u4<u4min):
@@ -130,9 +142,9 @@ func rcm(X, U):
 	elif(u5<u5min):
 		u5 = u5min;
 	
-
-
-
+	
+	#           ---------- Intermediate variables ----------
+	
 	var Va = sqrt(pow(x1,2) + pow(x2,2) + pow(x3,2)); 
 	var alpha = atan2(x3,x1);
 	var beta = asin(x2/Va);
@@ -141,73 +153,72 @@ func rcm(X, U):
 	
 	var wbe_b = [[x4],[x5],[x6]];
 	var V_b = [[x1],[x2],[x3]];
-
-
-
+	
+	#           ---------- Aerodynamic Force Coefficient ----------
+	#
 	var CL_wb;
 	if alpha <= alpha_switch:
 		CL_wb = n*(alpha-alpha_L0);
 	else:
 		CL_wb = a3*pow(alpha,3) + a2*pow(alpha,2) + a1*alpha + a0;
 	
-
 	var epsilon = depsda*(alpha-alpha_L0);
 	var alpha_t = alpha-epsilon + u2 + 1.3*x5*lt/Va;
 	
-	
 	var yo = alpha_t*3.1*.2462
 	var CL_t = yo
-
+	
 	var CL = CL_wb + CL_t;
 	
 	var CD = 0.13 + 0.07*pow((5.5*alpha + 0.654),2);
 	
-	
 	var CY = -1.6*beta + 0.24*u3;
+	
 
-
-
-
+	#           ---------- Dimensional Aerodynamic Forces ----------
+	#
 	var FA_s = [[-CD*Q*S],
 			   [CY*Q*S],
 			   [-CL*Q*S]];
 	
-
+	# rotate to body axis
 	var C_bs = [[cos(alpha) ,0,-sin(alpha)],[0,1,0],[sin(alpha),0,cos(alpha)]];
 	
 	var FA_b = LinAlg.dot_mm(C_bs,FA_s); 
-
-
+	
+	#           ---------- Aerodynamic moment coefficient about AC ----------
+	#
 	var eta11 = -1.4*beta;
 	var eta21 = -.59 - (3.1*(St*lt)/(S*cbar))*(alpha - epsilon);
 	var eta31 = (1-alpha*(180/(15*PI)))*beta;
-
+	
 	var eta = [[eta11],[eta21],
 			  [eta31]];
-   
+	   
 	var dummy = [[-11, 0, 5],[0, (-4.03*(St*pow(lt,2))/(S*pow(cbar,2))), 0],[1.7, 0, -11.5]];
 	var dCMdx = LinAlg.ewise_ms_mul(dummy,(cbar/Va));
-
+	
 	#dCMdx = (cbar/Va)*[[-11 0 5],[0 (-4.03*(St*lt^2)/(S*cbar^2)) 0].[1.7 0 -11.5]];
 	
 	var dCMdu = [[-0.6, 0, 0.22],
 			[0, (-3.1*(St*lt)/(S*cbar)), 0],
 			[0, 0, -0.63]];
 	
+	#           ---------- Dimensionalizing the moments ----------
+	#
 	var CMac_b = LinAlg.column_add(LinAlg.column_add(eta, LinAlg.dot_mm(dCMdx,wbe_b)), LinAlg.dot_mm(dCMdu,[[u1],[u2],[u3]]))
-
 	
-	
+	#           ---------- Moments to CoG ----------
+	#
 	var MAac_b = LinAlg.ewise_ms_mul(CMac_b,Q*S*cbar);
-
-
-
+	
 	var rcg_b = [[Xcg],[Ycg],[Zcg]];
 	var rac_b = [[Xac],[Yac],[Zac]];
 	var MAcg_b = LinAlg.column_add(MAac_b,LinAlg.column_cross(FA_b, LinAlg.ewise_mm_sub(rcg_b,rac_b))); # TODO:: CROSS PRODUCT 1
 	
 	
-	
+	#           ---------- Engines ----------
+	#
 	var F1 = u4*m*g;
 	var F2 = u5*m*g;
 	
@@ -215,8 +226,7 @@ func rcm(X, U):
 	var FE2_b = [[F2],[0],[0]];
 	
 	var FE_b = LinAlg.column_add(FE1_b,FE2_b);
-
-
+	
 	var mew1 = [[Xcg-Xapt1],
 			[Yapt1 - Ycg],
 			[Zcg - Zapt1]];
@@ -229,16 +239,18 @@ func rcm(X, U):
 	var MEcg2_b = LinAlg.column_cross(mew2,FE2_b); #todo : cross
 	var MEcg_b = LinAlg.column_add(MEcg1_b,MEcg2_b);
 	
-	
+	#           ---------- Gravity ----------
+	#
 	var g_b = [[-g*sin(x8)],
 		   [g*cos(x8)*sin(x7)],
 		   [g*cos(x8)*cos(x7)]];
 	
 	
 	var Fg_b = LinAlg.ewise_ms_mul(g_b,m)
-
-
 	
+	#           ---------- State Derivatives ----------
+	#
+	# Inertia Matrix
 	var Ib = LinAlg.ewise_ms_mul([[40.07,0, -2.0923],[0, 64, 0],[-2.0923, 0, 99.92]],m);
 	
 	var invIb = LinAlg.ewise_ms_mul([[0.0249836, 0, 0.000523151],
@@ -259,15 +271,15 @@ func rcm(X, U):
 	var H_phi = [[1,sin(x7)*tan(x8), cos(x7)*tan(x8)],
 			[0, cos(x7), -sin(x7)],
 			[0, sin(x7)/cos(x8), cos(x7)/cos(x8)]];
-		
-		
+	
+	
 	var x7to9dot = LinAlg.dot_mm(H_phi,wbe_b);
 	
-	
-	
-	
+	# Place in first order form
 	var x1to9dot = x1to3dot+x4to6dot+x7to9dot;
 	
+	#        ---------- Navigation Equations ----------
+	#
 	var C1v = [[cos(x9), sin(x9), 0],
 		  [-sin(x9), cos(x9), 0],
 		  [0, 0, 1]];
@@ -289,10 +301,6 @@ func rcm(X, U):
 	
 	return XDOT
  
-
-
-
-
 
 
 var lol

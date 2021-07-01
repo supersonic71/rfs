@@ -9,7 +9,7 @@
 	sputnik_beep | No Copyright | NASA
 	
 	
-	
+LinAlg - external library for matrix operations | MIT | [higgs-bosoff](https://github.com/higgs-bosoff/godot-linalg)	
 	
 [No Copyright Music] Glory - (Royalty Free Epic Music)
 -------------------------------------------

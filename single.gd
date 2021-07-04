@@ -79,7 +79,7 @@ func _on_rcam_mouse_exited():
 func _on_aerodas_mouse_entered():
 	aero_b.rect_size.x += 20
 	aero_b.rect_size.y += 20
-	b.text = "A simple force-only model with AERODAS post-stall modelling\nPress the TAB key for controls.\nThis model can be controlled directly with the keyboard"
+	b.text = "A simple, force-only model with AERODAS post-stall modelling\nPress the TAB key for controls.\nThis model can be controlled directly with the keyboard"
 	b.visible = true
 	
 
@@ -90,7 +90,7 @@ func _on_aerodas_mouse_exited():
 
 
 func _on_simulink_mouse_entered():
-	b.text = "An integration with MATLAB simulink. Demo of drone from Simulink\nNote : This model requires few software dependencies. Please ensure its installed before trying.\nFor set-up instructions, kindly refer to\nhttps://github.com/sgt-miller/rivendellfs/blob/master/readme.md"
+	b.text = "An integration with MATLAB simulink. Demo of drone from Simulink\nNote : This model requires few software dependencies. Please ensure its installed before trying.\nFor set-up instructions, kindly refer to\nhttps://github.com/sgt-miller/rfs/README.md"
 	simulink_b.rect_size.x += 20
 	simulink_b.rect_size.y += 20
 	b.visible = true

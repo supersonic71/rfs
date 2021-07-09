@@ -1,3 +1,9 @@
+## Authors
+* [Ephraim Raj](https://github.com/Sgt-Miller/)
+* [K R S Nandhan](https://github.com/krs131099/)
+
+
+
 3rd Party Licenses 
 
 	Tool | License | Author  
